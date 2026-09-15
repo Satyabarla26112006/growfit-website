@@ -1,572 +1,236 @@
+"use client";
+
 import Image from "next/image";
+import { useEffect, useMemo, useRef, useState } from "react";
 
-type Card = {
-  title: string;
-  role?: string;
-  body: string;
-  sources: string;
-};
-
-const macronutrients: Card[] = [
-  {
-    title: "Protein",
-    role: "Build & repair",
-    body: "Protein supplies amino acids used to build and repair muscles and other tissues. It also contributes to enzymes, hormones and immune functions.",
-    sources: "Eggs, dairy, paneer, fish, chicken, lentils, beans, soy, nuts and seeds.",
-  },
-  {
-    title: "Carbohydrates",
-    role: "Fuel",
-    body: "Carbohydrates are an important source of energy, particularly for the brain and physical activity.",
-    sources: "Rice, roti, oats, potatoes, fruits, vegetables and whole grains.",
-  },
-  {
-    title: "Fats",
-    role: "Essential function",
-    body: "Dietary fats provide energy, support cell membranes and help the body absorb fat-soluble vitamins A, D, E and K.",
-    sources: "Nuts, seeds, vegetable oils, avocado, eggs and fatty fish.",
-  },
+const nutrients = [
+  { key: "protein", title: "Protein", subtitle: "Build & repair", text: "Amino acids support muscle and tissue maintenance, enzymes, hormones and immune function.", color: "violet" },
+  { key: "carbs", title: "Carbohydrates", subtitle: "Fuel movement", text: "An important source of energy, especially for the brain and physical activity.", color: "mint" },
+  { key: "fats", title: "Fats", subtitle: "Support function", text: "Provide energy, support cell membranes and help the body absorb vitamins A, D, E and K.", color: "lime" },
 ];
 
-const fatSoluble: Card[] = [
-  {
-    title: "Vitamin A",
-    role: "Fat-soluble",
-    body: "Supports normal vision, immune function, growth and cell development.",
-    sources: "Carrots, leafy greens, eggs, dairy and animal foods.",
-  },
-  {
-    title: "Vitamin D",
-    role: "Fat-soluble",
-    body: "Helps the body absorb calcium and supports bones, muscles and immune function.",
-    sources: "Sun exposure, fatty fish, egg yolk and fortified foods.",
-  },
-  {
-    title: "Vitamin E",
-    role: "Fat-soluble",
-    body: "Acts as an antioxidant and supports immune function.",
-    sources: "Nuts, seeds, vegetable oils and some green vegetables.",
-  },
-  {
-    title: "Vitamin K",
-    role: "Fat-soluble",
-    body: "Supports normal blood clotting and proteins involved in bone-related functions.",
-    sources: "Spinach, methi, broccoli, cabbage and other leafy vegetables.",
-  },
+const vitaminsFat = [
+  ["A", "Vitamin A", "Vision", "Supports normal vision, immune function and cell development."],
+  ["D", "Vitamin D", "Bones", "Helps calcium absorption and supports bones, muscles and immune function."],
+  ["E", "Vitamin E", "Protection", "Supports antioxidant protection and immune function."],
+  ["K", "Vitamin K", "Clotting", "Supports normal blood clotting and bone-related functions."],
 ];
 
-const waterSoluble: Card[] = [
-  {
-    title: "Vitamin B1 — Thiamine",
-    role: "Water-soluble",
-    body: "Helps convert food into energy and supports normal nerve and cell function.",
-    sources: "Whole grains, legumes, nuts, seeds, meat and fish.",
-  },
-  {
-    title: "Vitamin B2 — Riboflavin",
-    role: "Water-soluble",
-    body: "Supports energy metabolism, growth and normal cellular function.",
-    sources: "Milk, eggs, meat, fish and green vegetables.",
-  },
-  {
-    title: "Vitamin B3 — Niacin",
-    role: "Water-soluble",
-    body: "Supports energy metabolism and normal cell, skin and nervous-system function.",
-    sources: "Meat, fish, poultry, groundnuts, whole grains and legumes.",
-  },
-  {
-    title: "Vitamin B5 — Pantothenic acid",
-    role: "Water-soluble",
-    body: "Helps the body use food for energy and is involved in fat metabolism.",
-    sources: "Meat, eggs, milk, mushrooms, whole grains and legumes.",
-  },
-  {
-    title: "Vitamin B6 — Pyridoxine",
-    role: "Water-soluble",
-    body: "Important for amino-acid metabolism, neurotransmitter synthesis, hemoglobin formation and immune function.",
-    sources: "Fish, chicken, potatoes, bananas, chickpeas and fortified foods.",
-  },
-  {
-    title: "Vitamin B7 — Biotin",
-    role: "Water-soluble",
-    body: "Helps enzymes involved in fat, carbohydrate and protein metabolism.",
-    sources: "Eggs, nuts, seeds, legumes, meat and fish.",
-  },
-  {
-    title: "Vitamin B9 — Folate",
-    role: "Water-soluble",
-    body: "Supports DNA synthesis, cell division, red blood cell formation and normal fetal development.",
-    sources: "Leafy greens, beans, lentils, peas, citrus fruits and fortified foods.",
-  },
-  {
-    title: "Vitamin B12 — Cobalamin",
-    role: "Water-soluble",
-    body: "Supports red blood cell formation, DNA synthesis and normal neurological function.",
-    sources: "Milk, eggs, fish, meat, poultry and fortified foods.",
-  },
-  {
-    title: "Vitamin C",
-    role: "Water-soluble",
-    body: "Supports collagen formation, wound healing, immune function and absorption of non-heme iron.",
-    sources: "Amla, guava, citrus fruits, tomatoes, peppers and vegetables.",
-  },
+const vitaminsWater = [
+  ["B1", "Thiamine", "Energy", "Energy metabolism and normal nerve and cell function."],
+  ["B2", "Riboflavin", "Metabolism", "Energy metabolism, growth and cellular function."],
+  ["B3", "Niacin", "Cell function", "Energy metabolism and normal cell function."],
+  ["B5", "Pantothenic", "Energy", "Helps use food for energy and supports fat metabolism."],
+  ["B6", "Pyridoxine", "Amino acids", "Amino-acid metabolism, hemoglobin formation and immune function."],
+  ["B7", "Biotin", "Metabolism", "Helps enzymes involved in fat, carbohydrate and protein metabolism."],
+  ["B9", "Folate", "Cell division", "DNA synthesis, cell division and red blood cell formation."],
+  ["B12", "Cobalamin", "Nerves + blood", "Red blood cell formation, DNA synthesis and neurological function."],
+  ["C", "Vitamin C", "Collagen", "Collagen formation, wound healing and non-heme iron absorption."],
 ];
 
-const majorMinerals: Card[] = [
-  {
-    title: "Calcium",
-    body: "Supports bones and teeth, muscle contraction, nerve function and blood clotting.",
-    sources: "Milk, curd, paneer, ragi, sesame and leafy greens.",
-  },
-  {
-    title: "Phosphorus",
-    body: "Important for bones and teeth, energy metabolism, DNA/RNA and cell membranes.",
-    sources: "Dairy, pulses, meat, fish, nuts and seeds.",
-  },
-  {
-    title: "Magnesium",
-    body: "Supports muscle and nerve function, energy metabolism and many enzyme reactions.",
-    sources: "Nuts, seeds, pulses, whole grains and leafy greens.",
-  },
-  {
-    title: "Sodium",
-    body: "Helps maintain fluid balance and supports nerve and muscle function. Excessive intake can contribute to high blood pressure.",
-    sources: "Salt and many packaged and natural foods.",
-  },
-  {
-    title: "Potassium",
-    body: "Supports nerve function, muscle contraction and fluid balance.",
-    sources: "Bananas, potatoes, beans, tomatoes, fruits and vegetables.",
-  },
-  {
-    title: "Chloride",
-    body: "Helps maintain fluid and electrolyte balance and is used to make stomach acid.",
-    sources: "Salt and many foods.",
-  },
-  {
-    title: "Sulfur",
-    body: "Forms part of sulfur-containing amino acids and proteins.",
-    sources: "Eggs, legumes, meat and other protein-rich foods.",
-  },
+const minerals = [
+  ["Fe", "Iron"], ["Ca", "Calcium"], ["Mg", "Magnesium"], ["K", "Potassium"],
+  ["Zn", "Zinc"], ["I", "Iodine"], ["Na", "Sodium"], ["P", "Phosphorus"],
+  ["Se", "Selenium"], ["Cu", "Copper"], ["Mn", "Manganese"], ["Cl", "Chloride"],
+  ["S", "Sulfur"], ["Mo", "Molybdenum"], ["Cr", "Chromium"],
 ];
 
-const traceMinerals: Card[] = [
-  {
-    title: "Iron",
-    body: "Needed for hemoglobin and oxygen transport and is important for normal energy metabolism.",
-    sources: "Meat, fish, eggs, lentils, beans, leafy vegetables and fortified foods.",
-  },
-  {
-    title: "Zinc",
-    body: "Supports immune function, growth, DNA and protein synthesis and wound healing.",
-    sources: "Meat, dairy, beans, nuts, seeds and whole grains.",
-  },
-  {
-    title: "Copper",
-    body: "Supports iron metabolism, connective tissue, nervous-system function and energy production.",
-    sources: "Nuts, seeds, legumes, whole grains and seafood.",
-  },
-  {
-    title: "Iodine",
-    body: "Needed to make thyroid hormones, which regulate metabolism and support normal growth and brain development.",
-    sources: "Iodized salt, seafood, dairy and eggs.",
-  },
-  {
-    title: "Selenium",
-    body: "Supports antioxidant systems, thyroid-hormone metabolism and immune function.",
-    sources: "Seafood, meat, eggs and grains; levels vary with soil and food source.",
-  },
-  {
-    title: "Manganese",
-    body: "Involved in metabolism, bone formation and enzyme function.",
-    sources: "Whole grains, legumes, nuts and seeds.",
-  },
-  {
-    title: "Molybdenum",
-    body: "Required for several enzymes involved in metabolism.",
-    sources: "Legumes, grains, nuts and other foods.",
-  },
-  {
-    title: "Chromium",
-    body: "Present in foods and may influence metabolism, but it should not be presented as a universal diabetes-prevention nutrient.",
-    sources: "Whole grains, meats, vegetables and other foods.",
-  },
+const appScreens = [
+  { src: "/app/home-main.jpeg", label: "HOME", title: "Your whole day.", text: "Calories, macros, meals, activity, goals and health context." },
+  { src: "/app/food.jpeg", label: "FOOD", title: "Every meal has context.", text: "Search food, organise meals and understand what you eat." },
+  { src: "/app/progress-overview.jpeg", label: "PROGRESS", title: "Make progress visible.", text: "Track weight, goals, nutrition and consistency over time." },
+  { src: "/app/nutrition-insights.jpeg", label: "INSIGHTS", title: "Go beyond one number.", text: "See nutrition patterns, macro breakdown and general guidance." },
+  { src: "/app/workouts.jpeg", label: "WORKOUTS", title: "Train with purpose.", text: "Structured plans for gym and home training." },
+  { src: "/app/profile-goal.jpeg", label: "PROFILE", title: "Make it personal.", text: "Keep your goals, activity level and daily targets connected." },
 ];
 
-function InfoCard({ item, tone = "violet" }: { item: Card; tone?: "violet" | "cyan" }) {
+function Phone({ src, alt, className = "" }: { src: string; alt: string; className?: string }) {
   return (
-    <article
-      className={`rounded-[1.8rem] border p-6 ${
-        tone === "violet"
-          ? "border-violet-400/20 bg-violet-400/[0.05]"
-          : "border-cyan-400/20 bg-cyan-400/[0.045]"
-      }`}
-    >
-      <div className="flex items-start justify-between gap-4">
-        <h3 className="text-xl font-semibold">{item.title}</h3>
-        {item.role ? (
-          <span className="shrink-0 rounded-full border border-white/10 px-3 py-1 text-[10px] uppercase tracking-[0.16em] text-white/35">
-            {item.role}
-          </span>
-        ) : null}
-      </div>
-      <p className="mt-4 text-sm leading-7 text-white/60">{item.body}</p>
-      <p className="mt-5 border-t border-white/10 pt-4 text-xs leading-6 text-white/35">
-        Food sources: {item.sources}
-      </p>
-    </article>
-  );
-}
-
-function Phone({ src, alt }: { src: string; alt: string }) {
-  return (
-    <div className="relative w-[245px] rounded-[2.4rem] border-[6px] border-[#202b38] bg-[#07111c] p-1.5 shadow-[0_28px_75px_rgba(0,0,0,0.55)] sm:w-[275px]">
-      <div className="absolute left-1/2 top-2 z-10 h-5 w-24 -translate-x-1/2 rounded-full bg-black" />
-      <div className="relative aspect-[9/20] overflow-hidden rounded-[2rem]">
-        <Image
-          src={src}
-          alt={alt}
-          fill
-          className="object-cover object-top"
-          sizes="275px"
-        />
+    <div className={`nxp-phone ${className}`}>
+      <div className="nxp-phone-side" />
+      <div className="nxp-phone-notch" />
+      <div className="nxp-phone-screen">
+        <Image src={src} alt={alt} fill sizes="340px" className="object-cover object-top" />
       </div>
     </div>
   );
 }
 
+function Label({ children }: { children: React.ReactNode }) {
+  return <div className="nxp-label">{children}</div>;
+}
+
+function MagneticButton({ href, children }: { href: string; children: React.ReactNode }) {
+  const ref = useRef<HTMLAnchorElement>(null);
+  const move = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const el = ref.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const x = e.clientX - r.left - r.width / 2;
+    const y = e.clientY - r.top - r.height / 2;
+    el.style.transform = `translate(${x * 0.1}px,${y * 0.1}px)`;
+  };
+  const reset = () => {
+    if (ref.current) ref.current.style.transform = "";
+  };
+  return <a ref={ref} href={href} className="nxp-magnetic" onMouseMove={move} onMouseLeave={reset}>{children}</a>;
+}
+
 export default function Home() {
+  const [activeNutrient, setActiveNutrient] = useState(0);
+  const [activeScreen, setActiveScreen] = useState(0);
+  const [cursor, setCursor] = useState({ x: 0, y: 0 });
+  const progressRef = useRef(0);
+
+  useEffect(() => {
+    const move = (e: PointerEvent) => setCursor({
+      x: e.clientX / window.innerWidth - 0.5,
+      y: e.clientY / window.innerHeight - 0.5,
+    });
+    const scroll = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      progressRef.current = max > 0 ? window.scrollY / max : 0;
+      document.documentElement.style.setProperty("--scroll-progress", String(progressRef.current));
+    };
+    window.addEventListener("pointermove", move, { passive: true });
+    window.addEventListener("scroll", scroll, { passive: true });
+    scroll();
+    return () => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("scroll", scroll);
+    };
+  }, []);
+
+  const stageStyle = useMemo(() => ({
+    transform: `rotateY(${cursor.x * 7}deg) rotateX(${-cursor.y * 5}deg)`,
+  }), [cursor]);
+
+  const nutrient = nutrients[activeNutrient];
+  const screen = appScreens[activeScreen];
+
   return (
-    <main className="min-h-screen bg-[#05080d] text-white">
-      <nav className="sticky top-0 z-50 border-b border-white/[0.07] bg-[#05080d]/92 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 lg:px-10">
-          <a href="#" className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-sm font-black text-[#05080d]">
-              G
-            </div>
-            <div>
-              <p className="text-lg font-semibold">GrowFit</p>
-              <p className="text-[9px] tracking-[0.18em] text-white/30">
-                HEALTH · FITNESS · PROGRESS
-              </p>
-            </div>
-          </a>
+    <main className="nxp-site">
+      <div className="nxp-progress"><span /></div>
+      <div className="nxp-grain" />
 
-          <div className="hidden items-center gap-8 md:flex">
-            <a href="#app" className="text-sm text-white/60 hover:text-white">App</a>
-            <a href="#nutrition" className="text-sm text-white/60 hover:text-white">Nutrition</a>
-            <a href="#vitamins" className="text-sm text-white/60 hover:text-white">Vitamins</a>
-            <a href="#minerals" className="text-sm text-white/60 hover:text-white">Minerals</a>
-            <a href="#india" className="text-sm text-white/60 hover:text-white">India</a>
-          </div>
-
-          <a href="#download" className="rounded-full bg-white px-5 py-2.5 text-sm font-semibold" style={{ color: "#05080d" }}>
-            Get GrowFit
+      <header className="nxp-nav">
+        <div className="nxp-nav-inner">
+          <a href="#" className="nxp-brand">
+            <span className="nxp-mark">G</span>
+            <span><b>GrowFit</b><small>HEALTH · FITNESS · PROGRESS</small></span>
           </a>
+          <nav className="nxp-nav-links">
+            <a href="#product">Product</a>
+            <a href="#nutrition">Nutrition</a>
+            <a href="#vitamins">Vitamins</a>
+            <a href="#minerals">Minerals</a>
+            <a href="#india">India</a>
+          </nav>
+          <MagneticButton href="#download">Get GrowFit <span>↗</span></MagneticButton>
         </div>
-      </nav>
+      </header>
 
-      {/* HERO */}
-      <section className="border-b border-white/[0.07]">
-        <div className="mx-auto grid max-w-7xl items-center gap-16 px-5 pb-24 pt-20 lg:grid-cols-[1.05fr_0.95fr] lg:px-10 lg:pb-32 lg:pt-28">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-violet-300">
-              GrowFit Nutrition Guide
-            </p>
-            <h1 className="mt-6 max-w-4xl text-5xl font-semibold leading-[1.02] tracking-[-0.055em] sm:text-6xl lg:text-8xl">
-              Eat with
-              <span className="block text-violet-300">understanding.</span>
-            </h1>
-            <p className="mt-7 max-w-2xl text-lg leading-8 text-white/50">
-              Learn how nutrition supports energy, growth, recovery and everyday
-              health — from macronutrients to every major vitamin and mineral.
-            </p>
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <a href="#nutrition" className="rounded-full bg-white px-7 py-4 text-center text-sm font-semibold" style={{ color: "#05080d" }}>
-                Start learning
-              </a>
-              <a href="#app" className="rounded-full border border-white/15 px-7 py-4 text-center text-sm font-semibold text-white">
-                See GrowFit
-              </a>
+      <section className="nxp-hero">
+        <div className="nxp-wrap nxp-hero-grid">
+          <div className="nxp-hero-copy">
+            <div className="nxp-live"><i /> THE HEALTH APP FOR REAL LIFE</div>
+            <h1>Know your body.<br /><span>Grow into it.</span></h1>
+            <p>Nutrition, movement and progress in one intelligent experience — designed around the person, not the number.</p>
+            <div className="nxp-actions">
+              <MagneticButton href="#product">Explore the product <span>→</span></MagneticButton>
+              <a href="#nutrition" className="nxp-text-link">Why nutrition matters <span>↓</span></a>
+            </div>
+            <div className="nxp-meta">
+              <div><b>01</b><span>LEARN</span></div>
+              <div><b>02</b><span>TRACK</span></div>
+              <div><b>03</b><span>GROW</span></div>
             </div>
           </div>
 
-          <div className="mx-auto">
-            <Phone src="/app/home-main.jpeg" alt="GrowFit home dashboard" />
+          <div className="nxp-hero-stage">
+            <div className="nxp-grid" />
+            <div className="nxp-stage-glow" />
+            <div className="nxp-orbit orbit-a" />
+            <div className="nxp-orbit orbit-b" />
+            <div className="nxp-device-rig" style={stageStyle}>
+              <Phone src="/app/food.jpeg" alt="GrowFit food screen" className="nxp-small left" />
+              <Phone src="/app/home-main.jpeg" alt="GrowFit home screen" className="nxp-main" />
+              <Phone src="/app/workouts.jpeg" alt="GrowFit workout screen" className="nxp-small right" />
+            </div>
+            <div className="nxp-stat top"><span>DAILY ENERGY</span><strong>2,214 <em>kcal</em></strong><small>Personal target</small></div>
+            <div className="nxp-stat bottom"><span>GOAL PROGRESS</span><strong>+0.5 kg</strong><small>This week</small></div>
           </div>
         </div>
       </section>
 
-      {/* WHY NUTRITION */}
-      <section id="nutrition" className="mx-auto max-w-7xl px-5 py-24 lg:px-10 lg:py-32">
-        <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
-          <div className="lg:sticky lg:top-28 lg:self-start">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-300">
-              01 · The foundation
-            </p>
-            <h2 className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">
-              Why nutrition matters.
-            </h2>
-            <p className="mt-6 leading-8 text-white/45">
-              Food supplies energy and nutrients your body uses for normal
-              function, activity, repair and growth. A balanced eating pattern
-              is more useful than focusing on calories alone.
-            </p>
-
-            <div className="mt-8 rounded-3xl border border-white/[0.08] bg-white/[0.025] p-6">
-              <p className="font-semibold">Think beyond calories.</p>
-              <p className="mt-2 text-sm leading-7 text-white/40">
-                Calories measure energy. Nutrition is the bigger picture:
-                protein, carbohydrates, fats, vitamins, minerals, fiber and
-                water all matter.
-              </p>
-            </div>
-          </div>
-
-          <div className="grid gap-4">
-            {macronutrients.map((item, index) => (
-              <InfoCard key={item.title} item={item} tone={index === 1 ? "cyan" : "violet"} />
-            ))}
-          </div>
+      <section className="nxp-ticker">
+        <div className="nxp-wrap nxp-ticker-track">
+          <span>Nutrition</span><i>✦</i><span>Movement</span><i>✦</i><span>Goals</span><i>✦</i><span>Consistency</span><i>✦</i><span>Progress</span><i>✦</i>
+          <span>Nutrition</span><i>✦</i><span>Movement</span><i>✦</i><span>Goals</span><i>✦</i><span>Consistency</span><i>✦</i>
         </div>
       </section>
 
-      {/* REAL APP */}
-      <section id="app" className="border-y border-white/[0.07] bg-[#07101a]">
-        <div className="mx-auto max-w-7xl px-5 py-24 lg:px-10 lg:py-32">
-          <div className="grid gap-14 lg:grid-cols-2 lg:items-center">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-violet-300">
-                02 · Inside GrowFit
-              </p>
-              <h2 className="mt-4 text-4xl font-semibold sm:text-5xl">
-                Track what you eat.
-                <span className="block text-violet-300">Understand your day.</span>
-              </h2>
-              <p className="mt-6 max-w-xl leading-8 text-white/45">
-                Your real GrowFit app combines food logging, calories, macros,
-                health readings, goals and progress in one experience.
-              </p>
+      <section id="product" className="nxp-section nxp-product">
+        <div className="nxp-wrap">
+          <div className="nxp-topline"><Label>THE PRODUCT</Label><span>INTERACTIVE APP TOUR</span></div>
+          <div className="nxp-heading">
+            <h2>Not a concept.<br /><span>A living product.</span></h2>
+            <p>Tap through the real GrowFit screens. The website becomes a product demo instead of a static gallery.</p>
+          </div>
 
-              <div className="mt-8 grid gap-3 sm:grid-cols-2">
-                {[
-                  ["Calories", "Daily energy target and intake"],
-                  ["Macros", "Protein, carbs and fats"],
-                  ["Food", "Meals, portions and recent foods"],
-                  ["Progress", "Weight, goals and consistency"],
-                ].map(([title, body]) => (
-                  <div key={title} className="rounded-2xl border border-white/[0.08] bg-white/[0.025] p-5">
-                    <p className="font-semibold">{title}</p>
-                    <p className="mt-2 text-sm leading-6 text-white/40">{body}</p>
-                  </div>
+          <div className="nxp-tour">
+            <div className="nxp-tour-copy">
+              <div className="nxp-tour-number">0{activeScreen + 1}</div>
+              <div className="nxp-tour-label">{screen.label}</div>
+              <h3>{screen.title}</h3>
+              <p>{screen.text}</p>
+              <div className="nxp-tour-controls">
+                {appScreens.map((item, index) => (
+                  <button key={item.label} type="button" onClick={() => setActiveScreen(index)} className={index === activeScreen ? "active" : ""}>
+                    <small>0{index + 1}</small>{item.label}
+                  </button>
                 ))}
               </div>
             </div>
-
-            <div className="flex justify-center">
-              <Phone src="/app/food.jpeg" alt="GrowFit food tracking app screen" />
+            <div className="nxp-tour-stage">
+              <div className="nxp-tour-glow" />
+              <Phone src={screen.src} alt={`GrowFit ${screen.label}`} className="nxp-tour-phone" />
+              <div className="nxp-chip chip-a">REAL UI</div>
+              <div className="nxp-chip chip-b">GROWFIT</div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* VITAMINS */}
-      <section id="vitamins" className="mx-auto max-w-7xl px-5 py-24 lg:px-10 lg:py-32">
-        <div className="max-w-4xl">
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-violet-300">
-            03 · Vitamins
-          </p>
-          <h2 className="mt-4 text-4xl font-semibold sm:text-5xl lg:text-6xl">
-            Every vitamin has a job.
-          </h2>
-          <p className="mt-5 max-w-3xl leading-8 text-white/45">
-            Vitamins are micronutrients required in small amounts for many
-            essential body processes. They are commonly grouped by how the body
-            handles them.
-          </p>
-        </div>
-
-        <div className="mt-16">
-          <div className="mb-7 border-b border-white/[0.08] pb-5">
-            <p className="text-xs uppercase tracking-[0.2em] text-violet-300">Fat-soluble vitamins</p>
-            <h3 className="mt-2 text-2xl font-semibold">A · D · E · K</h3>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-white/35">
-              These vitamins can be stored in the body. Food intake and high-dose
-              supplementation are not the same thing.
-            </p>
+      <section id="nutrition" className="nxp-section nxp-nutrition">
+        <div className="nxp-wrap">
+          <div className="nxp-heading nxp-heading-dark">
+            <div><Label>NUTRITION 101</Label><h2>Calories are only<br /><span>the beginning.</span></h2></div>
+            <p>Your body needs energy and nutrients for normal function, movement, recovery, growth and repair.</p>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2">
-            {fatSoluble.map((item) => (
-              <InfoCard key={item.title} item={item} />
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-20">
-          <div className="mb-7 border-b border-white/[0.08] pb-5">
-            <p className="text-xs uppercase tracking-[0.2em] text-cyan-300">Water-soluble vitamins</p>
-            <h3 className="mt-2 text-2xl font-semibold">B vitamins · C</h3>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-white/35">
-              Regular dietary intake matters. Vitamin B12 is a notable exception
-              because the body can store it for longer periods.
-            </p>
-          </div>
-
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {waterSoluble.map((item) => (
-              <InfoCard key={item.title} item={item} tone="cyan" />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* APP NUTRITION INSIGHTS */}
-      <section className="border-y border-white/[0.07] bg-[#07101a]">
-        <div className="mx-auto max-w-7xl px-5 py-24 lg:px-10 lg:py-32">
-          <div className="grid gap-14 lg:grid-cols-2 lg:items-center">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-300">
-                Nutrition insights
-              </p>
-              <h2 className="mt-4 text-4xl font-semibold sm:text-5xl">
-                Go beyond the macro numbers.
-              </h2>
-              <p className="mt-6 max-w-xl leading-8 text-white/45">
-                GrowFit can surface macro breakdown, general nutrition guidance
-                and displayed vitamin/mineral coverage from logged foods.
-              </p>
-            </div>
-
-            <div className="flex justify-center gap-5">
-              <Phone src="/app/nutrition-insights.jpeg" alt="GrowFit nutrition insights" />
-              <div className="hidden translate-y-10 sm:block">
-                <Phone src="/app/progress-health.jpeg" alt="GrowFit health readings and nutrition" />
+          <div className="nxp-lab">
+            <div className="nxp-lab-wheel">
+              <div className="nxp-lab-ring" />
+              <div className={`nxp-lab-orbit ${nutrient.color}`} />
+              <div className="nxp-lab-core">
+                <small>WHAT YOU EAT</small>
+                <strong>{nutrient.title}</strong>
+                <span>{nutrient.subtitle}</span>
               </div>
+              <div className="nxp-wheel-node one" />
+              <div className="nxp-wheel-node two" />
+              <div className="nxp-wheel-node three" />
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* MINERALS */}
-      <section id="minerals" className="border-b border-white/[0.07] bg-[#07101a]">
-        <div className="mx-auto max-w-7xl px-5 py-24 lg:px-10 lg:py-32">
-          <div className="max-w-4xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-300">
-              04 · Minerals
-            </p>
-            <h2 className="mt-4 text-4xl font-semibold sm:text-5xl lg:text-6xl">
-              Minerals keep systems working.
-            </h2>
-            <p className="mt-5 max-w-3xl leading-8 text-white/45">
-              Minerals are inorganic nutrients involved in bones, blood, nerves,
-              muscles, fluid balance, oxygen transport and enzyme systems.
-            </p>
-          </div>
-
-          <div className="mt-16">
-            <p className="mb-6 text-xs font-semibold uppercase tracking-[0.2em] text-white/30">
-              Major minerals
-            </p>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {majorMinerals.map((item) => (
-                <InfoCard key={item.title} item={item} tone="cyan" />
-              ))}
-            </div>
-          </div>
-
-          <div className="mt-16">
-            <p className="mb-6 text-xs font-semibold uppercase tracking-[0.2em] text-white/30">
-              Trace minerals
-            </p>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {traceMinerals.map((item) => (
-                <InfoCard key={item.title} item={item} />
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* INDIA */}
-      <section id="india" className="mx-auto max-w-7xl px-5 py-24 lg:px-10 lg:py-32">
-        <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-violet-300">
-              05 · India
-            </p>
-            <h2 className="mt-4 text-4xl font-semibold sm:text-5xl">
-              Why nutrition education matters in India.
-            </h2>
-            <p className="mt-5 leading-8 text-white/45">
-              Nutrition challenges can exist on multiple sides at once:
-              undernutrition, micronutrient deficiencies, overweight and obesity,
-              and diet-related chronic disease.
-            </p>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            {[
-              ["67.1%", "Children 6–59 months", "Anemia reported in NFHS-5 (2019–21)."],
-              ["57.2%", "Women 15–49 years", "Anemia reported in NFHS-5 (2019–21)."],
-              ["35.5%", "Children under 5", "Stunting reported in NFHS-5 (2019–21)."],
-              ["19.3%", "Children under 5", "Wasting reported in NFHS-5 (2019–21)."],
-            ].map(([number, title, body]) => (
-              <div key={`${number}-${title}`} className="rounded-[1.8rem] border border-white/[0.08] bg-white/[0.025] p-7">
-                <p className="text-3xl font-semibold text-violet-300">{number}</p>
-                <p className="mt-3 font-semibold">{title}</p>
-                <p className="mt-2 text-sm leading-6 text-white/40">{body}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-12 rounded-[2rem] border border-violet-400/15 bg-violet-400/[0.045] p-8 sm:p-10">
-          <h3 className="text-2xl font-semibold">Malnutrition is not just being underweight.</h3>
-          <p className="mt-4 max-w-4xl leading-8 text-white/45">
-            Malnutrition includes deficiencies, excesses or imbalances in energy
-            and nutrient intake. It can include undernutrition, micronutrient
-            deficiencies, overweight and obesity. A person can consume enough
-            calories and still have a diet that is poor in important nutrients.
-          </p>
-        </div>
-
-        <div className="mt-5 text-xs leading-6 text-white/25">
-          Sources: NFHS-5 (2019–21), WHO nutrition guidance and ICMR-NIN Dietary
-          Guidelines for Indians 2024.
-        </div>
-      </section>
-
-      {/* PROGRESS / WORKOUTS */}
-      <section className="border-y border-white/[0.07] bg-[#07101a]">
-        <div className="mx-auto max-w-7xl px-5 py-24 lg:px-10 lg:py-32">
-          <div className="grid gap-8 lg:grid-cols-3">
-            <div className="lg:col-span-2 grid gap-8 sm:grid-cols-2">
-              <div className="flex justify-center">
-                <Phone src="/app/workouts.jpeg" alt="GrowFit workout plans" />
-              </div>
-              <div className="flex justify-center sm:translate-y-12">
-                <Phone src="/app/progress-overview.jpeg" alt="GrowFit progress tracking" />
-              </div>
-            </div>
-
-            <div className="flex flex-col justify-center">
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-300">
-                06 · The full journey
-              </p>
-              <h2 className="mt-4 text-4xl font-semibold">
-                Nutrition and fitness belong together.
-              </h2>
-              <p className="mt-6 leading-8 text-white/45">
-                Eat with awareness. Train with purpose. Track your progress.
-                Build routines you can actually maintain.
-              </p>
-
-              <div className="mt-8 space-y-3">
-                {["Food tracking", "Workout plans", "Weight progress", "Consistency"].map((item) => (
-                  <div key={item} className="rounded-2xl border border-white/[0.08] bg-white/[0.025] px-5 py-4 text-sm text-white/60">
-                    {item}
-                  </div>
+            <div className="nxp-lab-info">
+              <span className="nxp-lab-index">0{activeNutrient + 1}</span>
+              <h3>{nutrient.title}</h3>
+              <p>{nutrient.text}</p>
+              <div className="nxp-nutrient-tabs">
+                {nutrients.map((item, index) => (
+                  <button key={item.key} type="button" onClick={() => setActiveNutrient(index)} className={index === activeNutrient ? "active" : ""}>
+                    <span>{item.title}</span><small>{item.subtitle}</small>
+                  </button>
                 ))}
               </div>
             </div>
@@ -574,104 +238,113 @@ export default function Home() {
         </div>
       </section>
 
-      {/* HEALTH */}
-      <section className="mx-auto max-w-7xl px-5 py-24 lg:px-10 lg:py-32">
-        <div className="grid gap-5 lg:grid-cols-2">
-          <div className="rounded-[2rem] border border-white/[0.08] bg-white/[0.025] p-8 sm:p-10">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300">Health context</p>
-            <h3 className="mt-4 text-3xl font-semibold">Keep useful readings together.</h3>
-            <p className="mt-5 leading-8 text-white/40">
-              GrowFit can display entered blood pressure, blood glucose and BMI
-              alongside other health information. These readings are for tracking
-              and context, not diagnosis.
-            </p>
+      <section id="vitamins" className="nxp-section nxp-vitamins">
+        <div className="nxp-wrap">
+          <div className="nxp-heading">
+            <div><Label>MICRONUTRIENTS</Label><h2>13 vitamins.<br /><span>One beautiful system.</span></h2></div>
+            <p>Instead of a white wall of cards, vitamins are grouped by type and presented as a clean visual knowledge map.</p>
           </div>
 
-          <div className="rounded-[2rem] border border-white/[0.08] bg-white/[0.025] p-8 sm:p-10">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-violet-300">Personal goals</p>
-            <h3 className="mt-4 text-3xl font-semibold">Make the journey yours.</h3>
-            <p className="mt-5 leading-8 text-white/40">
-              Set a goal, track your target weight, choose your activity level
-              and keep your daily nutrition targets visible.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* SAFETY */}
-      <section className="border-y border-white/[0.07] bg-[#07101a]">
-        <div className="mx-auto max-w-7xl px-5 py-20 lg:px-10">
-          <div className="rounded-3xl border border-white/[0.08] bg-white/[0.025] p-7 sm:p-9">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/35">
-              Important
-            </p>
-            <h2 className="mt-3 text-2xl font-semibold">Education is not diagnosis.</h2>
-            <p className="mt-4 max-w-4xl leading-8 text-white/40">
-              GrowFit nutrition information is general education. A food log
-              cannot by itself prove a vitamin or mineral deficiency, and app
-              readings should not be treated as a medical diagnosis. Suspected
-              deficiencies or concerning health readings should be discussed with
-              a qualified healthcare professional.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* DOWNLOAD */}
-      <section id="download" className="mx-auto max-w-7xl px-5 py-24 lg:px-10 lg:py-32">
-        <div className="rounded-[2.5rem] border border-violet-400/15 bg-violet-400/[0.05] p-8 text-center sm:p-12 lg:p-16">
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-violet-300">
-            Get GrowFit
-          </p>
-          <h2 className="mt-4 text-4xl font-semibold sm:text-5xl lg:text-6xl">
-            Ready to grow?
-          </h2>
-          <p className="mx-auto mt-6 max-w-2xl leading-8 text-white/45">
-            Learn about your nutrition, track your routine and see your progress
-            come together in one app.
-          </p>
-          <div className="mt-8 inline-flex rounded-full bg-white px-7 py-4 text-sm font-semibold" style={{ color: "#05080d" }}>
-            Android launch coming soon
-          </div>
-          <p className="mt-4 text-xs text-white/25">iOS planned</p>
-        </div>
-      </section>
-
-      {/* ABOUT */}
-      <section id="about" className="border-t border-white/[0.07]">
-        <div className="mx-auto max-w-7xl px-5 py-24 lg:px-10 lg:py-28">
-          <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-violet-300">
-                Founder
-              </p>
-              <h2 className="mt-4 text-5xl font-semibold">Satya</h2>
-              <p className="mt-3 text-xl text-white">Founder &amp; Creator of GrowFit</p>
-              <p className="mt-6 max-w-xl leading-8 text-white/40">
-                Building GrowFit around a simple idea: make health and fitness
-                easier to understand, track and improve.
-              </p>
+          <div className="nxp-vitamin-hero">
+            <div className="nxp-vitamin-core">
+              <span>VITAMINS</span>
+              <strong>13</strong>
+              <small>essential vitamins</small>
             </div>
+            <div className="nxp-vitamin-path path-a" />
+            <div className="nxp-vitamin-path path-b" />
+            <div className="nxp-v-floating fat">
+              <b>A · D · E · K</b><span>FAT-SOLUBLE</span><small>Stored more readily by the body</small>
+            </div>
+            <div className="nxp-v-floating water">
+              <b>B1 → B12 · C</b><span>WATER-SOLUBLE</span><small>Regular dietary intake matters</small>
+            </div>
+          </div>
 
-            <div className="rounded-3xl border border-white/[0.08] bg-white/[0.025] p-8">
-              <p className="text-sm uppercase tracking-[0.2em] text-cyan-300">The idea</p>
-              <h3 className="mt-4 text-3xl font-semibold">Health shouldn&apos;t feel complicated.</h3>
-              <p className="mt-5 leading-8 text-white/40">
-                Know what you eat. Move your body. Build better habits. Watch
-                your progress.
-              </p>
+          <div className="nxp-vitamin-group">
+            <div className="nxp-group-title"><div><span>FAT-SOLUBLE</span><h3>A · D · E · K</h3></div><p>Stored more readily by the body.</p></div>
+            <div className="nxp-v-cards fat-cards">
+              {vitaminsFat.map(([code, name, role, text], i) => (
+                <article key={code} className={`v-card v${i + 1}`}><div className="v-card-top"><b>{code}</b><span>{role}</span></div><h4>{name}</h4><p>{text}</p></article>
+              ))}
+            </div>
+          </div>
+
+          <div className="nxp-vitamin-group">
+            <div className="nxp-group-title"><div><span>WATER-SOLUBLE</span><h3>B VITAMINS · C</h3></div><p>Regular dietary intake matters; B12 can be stored longer.</p></div>
+            <div className="nxp-v-cards water-cards">
+              {vitaminsWater.map(([code, name, role, text], i) => (
+                <article key={code} className={`v-card v${i + 1}`}><div className="v-card-top"><b>{code}</b><span>{role}</span></div><h4>{name}</h4><p>{text}</p></article>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-      <footer className="border-t border-white/[0.07]">
-        <div className="mx-auto flex max-w-7xl flex-col gap-6 px-5 py-10 sm:flex-row sm:items-center sm:justify-between lg:px-10">
+      <section id="minerals" className="nxp-section nxp-minerals">
+        <div className="nxp-wrap">
+          <div className="nxp-heading nxp-heading-dark">
+            <div><Label>ESSENTIAL MINERALS</Label><h2>Small amounts.<br /><span>Major responsibilities.</span></h2></div>
+            <p>From oxygen transport to nerve function, minerals keep essential systems working.</p>
+          </div>
+
+          <div className="nxp-mineral-visual">
+            <div className="nxp-mineral-center"><span>MINERALS</span><strong>15</strong><small>core nutrients</small></div>
+            {minerals.map(([code, name], i) => (
+              <div key={`${code}-${i}`} className={`nxp-mineral-node mn${i + 1}`}><b>{code}</b><span>{name}</span></div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="india" className="nxp-section nxp-india">
+        <div className="nxp-wrap nxp-india-grid">
           <div>
-            <p className="font-semibold">GrowFit</p>
-            <p className="mt-2 text-sm text-white/30">growfit.store</p>
+            <Label>INDIA · NUTRITION</Label>
+            <h2>One country.<br /><span>Many nutrition challenges.</span></h2>
+            <p>India faces multiple nutrition challenges at the same time: undernutrition, micronutrient deficiencies, overweight and obesity, and diet-related chronic disease.</p>
+            <div className="nxp-india-note"><b>Malnutrition is bigger than being underweight.</b><span>It can include deficiencies, excesses and imbalances in energy and nutrient intake.</span></div>
           </div>
-          <p className="text-xs text-white/25">© 2026 GrowFit · Satya, Founder &amp; Creator</p>
+          <div className="nxp-india-stats">
+            <article><strong>67.1%</strong><span>Children 6–59 months with anemia</span><small>NFHS-5 · 2019–21</small></article>
+            <article><strong>57.2%</strong><span>Women 15–49 with anemia</span><small>NFHS-5 · 2019–21</small></article>
+            <article><strong>35.5%</strong><span>Children under 5 stunted</span><small>NFHS-5 · 2019–21</small></article>
+            <article><strong>19.3%</strong><span>Children under 5 wasted</span><small>NFHS-5 · 2019–21</small></article>
+          </div>
+        </div>
+      </section>
+
+      <section className="nxp-section nxp-insights">
+        <div className="nxp-wrap nxp-insights-grid">
+          <div>
+            <Label>MORE OF GROWFIT</Label>
+            <h2>Health becomes more useful when the pieces connect.</h2>
+            <p>Food, training, health context, goals and progress are easier to understand when they live in one system.</p>
+          </div>
+          <div className="nxp-insight-phones">
+            <Phone src="/app/nutrition-insights.jpeg" alt="GrowFit nutrition insights" />
+            <Phone src="/app/profile-goal.jpeg" alt="GrowFit profile goals" className="raised" />
+          </div>
+        </div>
+      </section>
+
+      <section id="download" className="nxp-download">
+        <div className="nxp-download-box">
+          <div className="download-mesh" />
+          <div className="download-glow" />
+          <Label>COMING SOON</Label>
+          <h2>Ready to<br /><span>grow?</span></h2>
+          <p>Nutrition · Fitness · Progress</p>
+          <MagneticButton href="#">Android launch coming soon <span>↗</span></MagneticButton>
+          <small>iOS planned · growfit.store</small>
+        </div>
+      </section>
+
+      <footer className="nxp-footer">
+        <div className="nxp-wrap nxp-footer-grid">
+          <div><a href="#" className="nxp-brand"><span className="nxp-mark">G</span><span><b>GrowFit</b><small>YOUR HEALTH · YOUR PROGRESS</small></span></a><p>Built to make health simpler.</p></div>
+          <div><span>FOUNDER</span><strong>Satya</strong><small>Founder &amp; Creator of GrowFit</small></div>
+          <div className="nxp-footer-right"><span>growfit.store</span><small>© 2026 GrowFit</small></div>
         </div>
       </footer>
     </main>
