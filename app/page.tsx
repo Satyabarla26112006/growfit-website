@@ -600,7 +600,7 @@ export default function Home() {
               <div className="nxp-founder-glow" />
               <div className="nxp-founder-photo">
                 <Image
-                  src="/founder/satya-founder.jpg"
+                  src="/founder.jpg"
                   alt="Satya, Founder & Creator of GrowFit"
                   fill
                   sizes="96px"
