@@ -28,11 +28,45 @@ const vitaminsWater = [
   ["C", "Vitamin C", "Collagen", "Collagen formation, wound healing and non-heme iron absorption."],
 ];
 
+const vitaminDetails = [
+  { code: "A", name: "Vitamin A", group: "Fat-soluble", focus: "Vision + immunity", role: "Supports normal vision, immune function and cell development.", sources: "Carrots, sweet potato, spinach and other leafy greens; eggs, dairy and some animal foods.", low: "Low intake can impair vision and immune function." },
+  { code: "D", name: "Vitamin D", group: "Fat-soluble", focus: "Bones + muscles", role: "Helps the body absorb calcium and supports bones, muscles and immune function.", sources: "Sunlight exposure, fatty fish, egg yolk and fortified foods.", low: "Deficiency can weaken bones and, in severe cases, contribute to rickets or osteomalacia." },
+  { code: "E", name: "Vitamin E", group: "Fat-soluble", focus: "Antioxidant protection", role: "Helps protect cells from oxidative damage and supports immune function.", sources: "Nuts, seeds, vegetable oils and leafy greens.", low: "Deficiency is uncommon but can affect nerves and muscles, especially with fat-malabsorption disorders." },
+  { code: "K", name: "Vitamin K", group: "Fat-soluble", focus: "Clotting + bone", role: "Supports normal blood clotting and contributes to bone-related functions.", sources: "Leafy greens, cabbage, broccoli and other vegetables.", low: "Severe deficiency can impair normal blood clotting." },
+  { code: "B1", name: "Thiamine", group: "Water-soluble", focus: "Energy + nerves", role: "Helps convert food into energy and supports normal nerve and cell function.", sources: "Whole grains, pulses, nuts, seeds, pork and fortified foods.", low: "Severe deficiency can cause beriberi and neurological problems." },
+  { code: "B2", name: "Riboflavin", group: "Water-soluble", focus: "Energy + cells", role: "Supports energy metabolism, growth and normal cellular function.", sources: "Milk and dairy, eggs, meat, mushrooms, nuts and fortified foods.", low: "Deficiency can affect the mouth, skin, eyes and energy metabolism." },
+  { code: "B3", name: "Niacin", group: "Water-soluble", focus: "Metabolism + cells", role: "Supports energy metabolism and normal cell, skin and nervous-system function.", sources: "Meat, fish, poultry, peanuts, whole grains and fortified foods.", low: "Severe deficiency can cause pellagra." },
+  { code: "B5", name: "Pantothenic acid", group: "Water-soluble", focus: "Energy + fats", role: "Helps the body use food for energy and supports fat metabolism.", sources: "Meat, eggs, dairy, mushrooms, avocados, pulses and whole grains.", low: "Deficiency is uncommon and may cause fatigue or other nonspecific symptoms." },
+  { code: "B6", name: "Pyridoxine", group: "Water-soluble", focus: "Amino acids + blood", role: "Supports amino-acid metabolism, neurotransmitter production, hemoglobin formation and immunity.", sources: "Fish, poultry, potatoes, bananas, chickpeas and fortified foods.", low: "Deficiency can affect blood, skin, nerves and immune function." },
+  { code: "B7", name: "Biotin", group: "Water-soluble", focus: "Metabolism", role: "Helps enzymes involved in fat, carbohydrate and protein metabolism.", sources: "Eggs, nuts, seeds, legumes, fish and some vegetables.", low: "Deficiency is rare but may cause skin and neurological symptoms." },
+  { code: "B9", name: "Folate", group: "Water-soluble", focus: "DNA + cell division", role: "Supports DNA synthesis, cell division and red blood cell formation; especially important before and during pregnancy.", sources: "Leafy greens, beans, lentils, citrus fruits and fortified grains.", low: "Deficiency can cause megaloblastic anemia and is especially important to prevent around conception." },
+  { code: "B12", name: "Cobalamin", group: "Water-soluble", focus: "Blood + nerves", role: "Supports red blood cell formation, DNA synthesis and normal neurological function.", sources: "Fish, meat, eggs, milk and fortified foods.", low: "Deficiency can cause anemia and neurological problems. Risk can be higher when dietary animal foods are limited or absorption is impaired." },
+  { code: "C", name: "Vitamin C", group: "Water-soluble", focus: "Collagen + antioxidant", role: "Supports collagen formation, wound healing, immune function and absorption of non-heme iron.", sources: "Amla, guava, citrus fruits, tomatoes, peppers and many vegetables.", low: "Severe deficiency causes scurvy; low intake can also reduce iron absorption from plant foods." },
+];
+
 const minerals = [
   ["Fe", "Iron"], ["Ca", "Calcium"], ["Mg", "Magnesium"], ["K", "Potassium"],
   ["Zn", "Zinc"], ["I", "Iodine"], ["Na", "Sodium"], ["P", "Phosphorus"],
   ["Se", "Selenium"], ["Cu", "Copper"], ["Mn", "Manganese"], ["Cl", "Chloride"],
   ["S", "Sulfur"], ["Mo", "Molybdenum"], ["Cr", "Chromium"],
+];
+
+const mineralDetails = [
+  { code: "Fe", name: "Iron", type: "Trace", role: "Helps make hemoglobin, which carries oxygen in the blood, and supports normal energy metabolism.", sources: "Lentils, beans, leafy greens, meat, eggs and fortified foods.", low: "Low intake can contribute to iron deficiency and, in some people, iron-deficiency anemia." },
+  { code: "Ca", name: "Calcium", type: "Major", role: "Supports bones and teeth, muscle contraction, nerve signaling and normal blood clotting.", sources: "Milk, curd, paneer, ragi, sesame, leafy greens and fortified foods.", low: "Chronically low intake can weaken bone health." },
+  { code: "Mg", name: "Magnesium", type: "Major", role: "Supports hundreds of enzyme reactions, including energy production, muscle function and nerve function.", sources: "Nuts, seeds, whole grains, pulses and leafy greens.", low: "Severe deficiency can affect muscles, nerves and heart function." },
+  { code: "K", name: "Potassium", type: "Major", role: "Helps maintain fluid balance and supports nerve signaling, muscle contraction and heart function.", sources: "Banana, potatoes, pulses, vegetables, fruits, milk and curd.", low: "Low blood potassium can impair muscle and nerve function and may affect heart rhythm." },
+  { code: "Zn", name: "Zinc", type: "Trace", role: "Supports immune function, wound healing, DNA and protein synthesis, and normal growth.", sources: "Dairy, eggs, meat, legumes, nuts and seeds.", low: "Deficiency can impair immune function, growth, wound healing and taste." },
+  { code: "I", name: "Iodine", type: "Trace", role: "Needed to make thyroid hormones, which help regulate metabolism, growth and development.", sources: "Iodized salt, dairy, seafood and eggs.", low: "Deficiency can reduce thyroid hormone production and cause goiter; needs are especially important during pregnancy." },
+  { code: "Na", name: "Sodium", type: "Major", role: "Helps regulate fluid balance and is essential for nerve impulses and muscle contraction.", sources: "Salt and many foods that naturally contain sodium or have added salt.", low: "Too little sodium in blood can cause hyponatremia; excess dietary sodium can raise blood pressure in many people." },
+  { code: "P", name: "Phosphorus", type: "Major", role: "Supports bones and teeth and is part of ATP, DNA, RNA and cell membranes.", sources: "Milk, dairy, meat, fish, eggs, pulses, nuts and seeds.", low: "Low blood phosphate can affect muscles, bones and energy metabolism." },
+  { code: "Se", name: "Selenium", type: "Trace", role: "Supports antioxidant enzymes, thyroid hormone metabolism and immune function.", sources: "Fish, eggs, meat, dairy, cereals, nuts and seeds.", low: "Deficiency is uncommon in many settings but can impair selenoprotein functions." },
+  { code: "Cu", name: "Copper", type: "Trace", role: "Supports iron metabolism, connective tissue formation, nervous-system function and antioxidant enzymes.", sources: "Nuts, seeds, legumes, whole grains, cocoa and shellfish.", low: "Deficiency can contribute to anemia, low white-cell counts and neurological problems." },
+  { code: "Mn", name: "Manganese", type: "Trace", role: "Supports enzymes involved in metabolism, antioxidant defense and bone formation.", sources: "Whole grains, nuts, legumes, leafy vegetables and tea.", low: "Clinically significant deficiency is uncommon." },
+  { code: "Cl", name: "Chloride", type: "Major", role: "Helps maintain fluid and acid-base balance and is part of stomach hydrochloric acid.", sources: "Salt and foods containing sodium chloride.", low: "Marked loss can disturb fluid and acid-base balance." },
+  { code: "S", name: "Sulfur", type: "Major", role: "A component of sulfur-containing amino acids and several important proteins and molecules in the body.", sources: "Eggs, dairy, meat, fish, pulses, nuts and seeds.", low: "Deficiency is uncommon when protein intake is adequate." },
+  { code: "Mo", name: "Molybdenum", type: "Trace", role: "Acts as a helper for several enzymes involved in processing sulfur-containing compounds and other substances.", sources: "Legumes, grains, nuts and vegetables, depending on soil.", low: "Deficiency is very rare outside specific medical or inherited conditions." },
+  { code: "Cr", name: "Chromium", type: "Trace", role: "An essential trace element; its exact role in human metabolism is still being studied.", sources: "Whole grains, meats, vegetables, fruits and some nuts.", low: "Clear chromium deficiency is uncommon in healthy people eating a varied diet." },
 ];
 
 const appScreens = [
@@ -76,9 +110,71 @@ function MagneticButton({ href, children }: { href: string; children: React.Reac
   return <a ref={ref} href={href} className="nxp-magnetic" onMouseMove={move} onMouseLeave={reset}>{children}</a>;
 }
 
+function LearnPanel({
+  eyebrow,
+  title,
+  code,
+  group,
+  focus,
+  role,
+  sources,
+  low,
+}: {
+  eyebrow: string;
+  title: string;
+  code: string;
+  group: string;
+  focus: string;
+  role: string;
+  sources: string;
+  low: string;
+}) {
+  return (
+    <article className="mt-10 overflow-hidden rounded-[34px] border border-white/10 bg-[radial-gradient(circle_at_85%_10%,rgba(116,229,214,.11),transparent_28%),linear-gradient(145deg,#131a17,#0b100f)] p-6 shadow-[0_35px_100px_rgba(0,0,0,.32)] sm:p-8">
+      <div className="grid gap-8 lg:grid-cols-[.8fr_1.2fr]">
+        <div>
+          <div className="flex items-center gap-4">
+            <div className="grid h-16 w-16 place-items-center rounded-[20px] border border-[#c9ff62]/25 bg-[#c9ff62]/[0.07] text-2xl font-bold tracking-[-0.06em] text-[#c9ff62]">
+              {code}
+            </div>
+            <div>
+              <div className="text-[9px] font-semibold tracking-[.2em] text-[#74e5d6]">{eyebrow}</div>
+              <h3 className="mt-1 text-3xl font-semibold tracking-[-.05em] text-[#edf2ec] sm:text-4xl">{title}</h3>
+            </div>
+          </div>
+
+          <div className="mt-8 flex flex-wrap gap-2">
+            <span className="rounded-full border border-white/10 bg-white/[0.035] px-3 py-1.5 text-[9px] font-semibold tracking-[.12em] text-white/55">{group}</span>
+            <span className="rounded-full border border-[#c9ff62]/15 bg-[#c9ff62]/[0.055] px-3 py-1.5 text-[9px] font-semibold tracking-[.12em] text-[#c9ff62]">{focus}</span>
+          </div>
+
+          <p className="mt-6 max-w-xl text-[15px] leading-8 text-white/60">{role}</p>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="rounded-[24px] border border-white/8 bg-white/[0.035] p-5">
+            <div className="text-[9px] font-semibold tracking-[.18em] text-[#74e5d6]">FOOD SOURCES</div>
+            <p className="mt-3 text-sm leading-7 text-white/58">{sources}</p>
+          </div>
+          <div className="rounded-[24px] border border-[#a88cff]/15 bg-[#a88cff]/[0.05] p-5">
+            <div className="text-[9px] font-semibold tracking-[.18em] text-[#bdadff]">LOW INTAKE</div>
+            <p className="mt-3 text-sm leading-7 text-white/58">{low}</p>
+          </div>
+          <div className="sm:col-span-2 rounded-[24px] border border-[#74e5d6]/10 bg-[#74e5d6]/[0.035] p-5">
+            <div className="text-[9px] font-semibold tracking-[.18em] text-[#74e5d6]">GROWFIT NOTE</div>
+            <p className="mt-3 text-sm leading-7 text-white/50">Food tracking can help you understand intake and patterns; it does not by itself diagnose a vitamin or mineral deficiency.</p>
+          </div>
+        </div>
+      </div>
+    </article>
+  );
+}
+
 export default function Home() {
   const [activeNutrient, setActiveNutrient] = useState(0);
   const [activeScreen, setActiveScreen] = useState(0);
+  const [activeVitamin, setActiveVitamin] = useState(0);
+  const [activeMineral, setActiveMineral] = useState(0);
   const [cursor, setCursor] = useState({ x: 0, y: 0 });
   const progressRef = useRef(0);
 
@@ -107,6 +203,8 @@ export default function Home() {
 
   const nutrient = nutrients[activeNutrient];
   const screen = appScreens[activeScreen];
+  const vitamin = vitaminDetails[activeVitamin];
+  const mineral = mineralDetails[activeMineral];
 
   return (
     <main className="nxp-site">
@@ -242,7 +340,7 @@ export default function Home() {
         <div className="nxp-wrap">
           <div className="nxp-heading">
             <div><Label>MICRONUTRIENTS</Label><h2>13 vitamins.<br /><span>One beautiful system.</span></h2></div>
-            <p>Instead of a white wall of cards, vitamins are grouped by type and presented as a clean visual knowledge map.</p>
+            <p>The visual system stays clean; the detailed knowledge appears underneath when a vitamin is selected.</p>
           </div>
 
           <div className="nxp-vitamin-hero">
@@ -265,7 +363,9 @@ export default function Home() {
             <div className="nxp-group-title"><div><span>FAT-SOLUBLE</span><h3>A · D · E · K</h3></div><p>Stored more readily by the body.</p></div>
             <div className="nxp-v-cards fat-cards">
               {vitaminsFat.map(([code, name, role, text], i) => (
-                <article key={code} className={`v-card v${i + 1}`}><div className="v-card-top"><b>{code}</b><span>{role}</span></div><h4>{name}</h4><p>{text}</p></article>
+                <button key={code} type="button" onClick={() => setActiveVitamin(vitaminDetails.findIndex((item) => item.code === code))} className={`v-card v${i + 1} text-left`}>
+                  <div className="v-card-top"><b>{code}</b><span>{role}</span></div><h4>{name}</h4><p>{text}</p>
+                </button>
               ))}
             </div>
           </div>
@@ -274,10 +374,31 @@ export default function Home() {
             <div className="nxp-group-title"><div><span>WATER-SOLUBLE</span><h3>B VITAMINS · C</h3></div><p>Regular dietary intake matters; B12 can be stored longer.</p></div>
             <div className="nxp-v-cards water-cards">
               {vitaminsWater.map(([code, name, role, text], i) => (
-                <article key={code} className={`v-card v${i + 1}`}><div className="v-card-top"><b>{code}</b><span>{role}</span></div><h4>{name}</h4><p>{text}</p></article>
+                <button key={code} type="button" onClick={() => setActiveVitamin(vitaminDetails.findIndex((item) => item.code === code))} className={`v-card v${i + 1} text-left`}>
+                  <div className="v-card-top"><b>{code}</b><span>{role}</span></div><h4>{name}</h4><p>{text}</p>
+                </button>
               ))}
             </div>
           </div>
+
+          <div className="flex items-center justify-between gap-4 mt-12">
+            <div>
+              <div className="text-[9px] font-semibold tracking-[.22em] text-[#74e5d6]">VITAMIN DETAIL</div>
+              <div className="mt-2 text-sm text-white/40">Select any card above to expand its explanation below.</div>
+            </div>
+            <div className="rounded-full border border-[#c9ff62]/15 bg-[#c9ff62]/[0.05] px-3 py-1.5 text-[9px] font-semibold tracking-[.12em] text-[#c9ff62]">{String(activeVitamin + 1).padStart(2, "0")} / 13</div>
+          </div>
+
+          <LearnPanel
+            eyebrow={vitamin.group.toUpperCase()}
+            title={vitamin.name}
+            code={vitamin.code}
+            group={vitamin.group}
+            focus={vitamin.focus}
+            role={vitamin.role}
+            sources={vitamin.sources}
+            low={vitamin.low}
+          />
         </div>
       </section>
 
@@ -285,7 +406,7 @@ export default function Home() {
         <div className="nxp-wrap">
           <div className="nxp-heading nxp-heading-dark">
             <div><Label>ESSENTIAL MINERALS</Label><h2>Small amounts.<br /><span>Major responsibilities.</span></h2></div>
-            <p>From oxygen transport to nerve function, minerals keep essential systems working.</p>
+            <p>The solar-system visual remains untouched. The detailed mineral knowledge now lives directly underneath it.</p>
           </div>
 
           <div className="nxp-mineral-visual">
@@ -294,6 +415,39 @@ export default function Home() {
               <div key={`${code}-${i}`} className={`nxp-mineral-node mn${i + 1}`}><b>{code}</b><span>{name}</span></div>
             ))}
           </div>
+
+          <div className="mt-12 grid gap-4 sm:grid-cols-3">
+            {minerals.map(([code, name], index) => (
+              <button
+                key={`selector-${code}`}
+                type="button"
+                onClick={() => setActiveMineral(index)}
+                className={`group rounded-[22px] border p-4 text-left transition duration-200 hover:-translate-y-1 ${
+                  activeMineral === index
+                    ? "border-[#74e5d6]/55 bg-[#74e5d6]/[0.10] shadow-[0_20px_45px_rgba(116,229,214,.07)]"
+                    : "border-white/8 bg-white/[0.022] hover:border-white/15 hover:bg-white/[0.04]"
+                }`}
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-xl font-bold tracking-[-.04em] text-[#74e5d6]">{code}</span>
+                  <span className="rounded-full border border-white/8 px-2 py-1 text-[8px] font-semibold tracking-[.12em] text-white/35">{mineralDetails[index].type.toUpperCase()}</span>
+                </div>
+                <div className="mt-2 text-sm font-semibold text-white/78">{name}</div>
+                <div className="mt-1 text-[10px] leading-5 text-white/35">Click to explore</div>
+              </button>
+            ))}
+          </div>
+
+          <LearnPanel
+            eyebrow={`${mineral.type} MINERAL`}
+            title={mineral.name}
+            code={mineral.code}
+            group={`${mineral.type} mineral`}
+            focus={mineral.type === "Major" ? "Core body mineral" : "Trace mineral"}
+            role={mineral.role}
+            sources={mineral.sources}
+            low={mineral.low}
+          />
         </div>
       </section>
 
