@@ -4,9 +4,27 @@ import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 const nutrients = [
-  { key: "protein", title: "Protein", subtitle: "Build & repair", text: "Amino acids support muscle and tissue maintenance, enzymes, hormones and immune function.", color: "violet" },
-  { key: "carbs", title: "Carbohydrates", subtitle: "Fuel movement", text: "An important source of energy, especially for the brain and physical activity.", color: "mint" },
-  { key: "fats", title: "Fats", subtitle: "Support function", text: "Provide energy, support cell membranes and help the body absorb vitamins A, D, E and K.", color: "lime" },
+  {
+    key: "protein",
+    title: "Protein",
+    subtitle: "Build & repair",
+    text: "Amino acids support muscle and tissue maintenance, enzymes, hormones and immune function.",
+    color: "violet",
+  },
+  {
+    key: "carbs",
+    title: "Carbohydrates",
+    subtitle: "Fuel movement",
+    text: "An important source of energy, especially for the brain and physical activity.",
+    color: "mint",
+  },
+  {
+    key: "fats",
+    title: "Fats",
+    subtitle: "Support function",
+    text: "Provide energy, support cell membranes and help the body absorb vitamins A, D, E and K.",
+    color: "lime",
+  },
 ];
 
 const vitaminsFat = [
@@ -96,18 +114,25 @@ function Label({ children }: { children: React.ReactNode }) {
 
 function MagneticButton({ href, children }: { href: string; children: React.ReactNode }) {
   const ref = useRef<HTMLAnchorElement>(null);
+
   const move = (e: React.MouseEvent<HTMLAnchorElement>) => {
     const el = ref.current;
     if (!el) return;
     const r = el.getBoundingClientRect();
     const x = e.clientX - r.left - r.width / 2;
     const y = e.clientY - r.top - r.height / 2;
-    el.style.transform = `translate(${x * 0.1}px,${y * 0.1}px)`;
+    el.style.transform = `translate(${x * 0.1}px, ${y * 0.1}px)`;
   };
+
   const reset = () => {
     if (ref.current) ref.current.style.transform = "";
   };
-  return <a ref={ref} href={href} className="nxp-magnetic" onMouseMove={move} onMouseLeave={reset}>{children}</a>;
+
+  return (
+    <a ref={ref} href={href} className="nxp-magnetic" onMouseMove={move} onMouseLeave={reset}>
+      {children}
+    </a>
+  );
 }
 
 function LearnPanel({
@@ -130,39 +155,37 @@ function LearnPanel({
   low: string;
 }) {
   return (
-    <article className="mt-10 overflow-hidden rounded-[34px] border border-white/10 bg-[radial-gradient(circle_at_85%_10%,rgba(116,229,214,.11),transparent_28%),linear-gradient(145deg,#131a17,#0b100f)] p-6 shadow-[0_35px_100px_rgba(0,0,0,.32)] sm:p-8">
-      <div className="grid gap-8 lg:grid-cols-[.8fr_1.2fr]">
+    <article className="nxp-learn-panel">
+      <div className="nxp-learn-grid">
         <div>
-          <div className="flex items-center gap-4">
-            <div className="grid h-16 w-16 place-items-center rounded-[20px] border border-[#c9ff62]/25 bg-[#c9ff62]/[0.07] text-2xl font-bold tracking-[-0.06em] text-[#c9ff62]">
-              {code}
-            </div>
+          <div className="nxp-learn-heading">
+            <div className="nxp-learn-code">{code}</div>
             <div>
-              <div className="text-[9px] font-semibold tracking-[.2em] text-[#74e5d6]">{eyebrow}</div>
-              <h3 className="mt-1 text-3xl font-semibold tracking-[-.05em] text-[#edf2ec] sm:text-4xl">{title}</h3>
+              <div className="nxp-learn-eyebrow">{eyebrow}</div>
+              <h3>{title}</h3>
             </div>
           </div>
 
-          <div className="mt-8 flex flex-wrap gap-2">
-            <span className="rounded-full border border-white/10 bg-white/[0.035] px-3 py-1.5 text-[9px] font-semibold tracking-[.12em] text-white/55">{group}</span>
-            <span className="rounded-full border border-[#c9ff62]/15 bg-[#c9ff62]/[0.055] px-3 py-1.5 text-[9px] font-semibold tracking-[.12em] text-[#c9ff62]">{focus}</span>
+          <div className="nxp-learn-pills">
+            <span>{group}</span>
+            <span>{focus}</span>
           </div>
 
-          <p className="mt-6 max-w-xl text-[15px] leading-8 text-white/60">{role}</p>
+          <p className="nxp-learn-role">{role}</p>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="rounded-[24px] border border-white/8 bg-white/[0.035] p-5">
-            <div className="text-[9px] font-semibold tracking-[.18em] text-[#74e5d6]">FOOD SOURCES</div>
-            <p className="mt-3 text-sm leading-7 text-white/58">{sources}</p>
+        <div className="nxp-learn-info">
+          <div>
+            <span>FOOD SOURCES</span>
+            <p>{sources}</p>
           </div>
-          <div className="rounded-[24px] border border-[#a88cff]/15 bg-[#a88cff]/[0.05] p-5">
-            <div className="text-[9px] font-semibold tracking-[.18em] text-[#bdadff]">LOW INTAKE</div>
-            <p className="mt-3 text-sm leading-7 text-white/58">{low}</p>
+          <div>
+            <span>LOW INTAKE</span>
+            <p>{low}</p>
           </div>
-          <div className="sm:col-span-2 rounded-[24px] border border-[#74e5d6]/10 bg-[#74e5d6]/[0.035] p-5">
-            <div className="text-[9px] font-semibold tracking-[.18em] text-[#74e5d6]">GROWFIT NOTE</div>
-            <p className="mt-3 text-sm leading-7 text-white/50">Food tracking can help you understand intake and patterns; it does not by itself diagnose a vitamin or mineral deficiency.</p>
+          <div className="full">
+            <span>GROWFIT NOTE</span>
+            <p>Food tracking can help you understand intake and patterns; it does not by itself diagnose a vitamin or mineral deficiency.</p>
           </div>
         </div>
       </div>
@@ -176,30 +199,39 @@ export default function Home() {
   const [activeVitamin, setActiveVitamin] = useState(0);
   const [activeMineral, setActiveMineral] = useState(0);
   const [cursor, setCursor] = useState({ x: 0, y: 0 });
-  const progressRef = useRef(0);
 
   useEffect(() => {
-    const move = (e: PointerEvent) => setCursor({
-      x: e.clientX / window.innerWidth - 0.5,
-      y: e.clientY / window.innerHeight - 0.5,
-    });
+    const move = (e: PointerEvent) => {
+      setCursor({
+        x: e.clientX / window.innerWidth - 0.5,
+        y: e.clientY / window.innerHeight - 0.5,
+      });
+    };
+
     const scroll = () => {
       const max = document.documentElement.scrollHeight - window.innerHeight;
-      progressRef.current = max > 0 ? window.scrollY / max : 0;
-      document.documentElement.style.setProperty("--scroll-progress", String(progressRef.current));
+      document.documentElement.style.setProperty(
+        "--scroll-progress",
+        String(max > 0 ? window.scrollY / max : 0),
+      );
     };
+
     window.addEventListener("pointermove", move, { passive: true });
     window.addEventListener("scroll", scroll, { passive: true });
     scroll();
+
     return () => {
       window.removeEventListener("pointermove", move);
       window.removeEventListener("scroll", scroll);
     };
   }, []);
 
-  const stageStyle = useMemo(() => ({
-    transform: `rotateY(${cursor.x * 7}deg) rotateX(${-cursor.y * 5}deg)`,
-  }), [cursor]);
+  const stageStyle = useMemo(
+    () => ({
+      transform: `rotateY(${cursor.x * 7}deg) rotateX(${-cursor.y * 5}deg)`,
+    }),
+    [cursor],
+  );
 
   const nutrient = nutrients[activeNutrient];
   const screen = appScreens[activeScreen];
@@ -217,6 +249,7 @@ export default function Home() {
             <span className="nxp-mark">G</span>
             <span><b>GrowFit</b><small>HEALTH · FITNESS · PROGRESS</small></span>
           </a>
+
           <nav className="nxp-nav-links">
             <a href="#product">Product</a>
             <a href="#nutrition">Nutrition</a>
@@ -224,6 +257,7 @@ export default function Home() {
             <a href="#minerals">Minerals</a>
             <a href="#india">India</a>
           </nav>
+
           <MagneticButton href="#download">Get GrowFit <span>↗</span></MagneticButton>
         </div>
       </header>
@@ -234,10 +268,12 @@ export default function Home() {
             <div className="nxp-live"><i /> THE HEALTH APP FOR REAL LIFE</div>
             <h1>Know your body.<br /><span>Grow into it.</span></h1>
             <p>Nutrition, movement and progress in one intelligent experience — designed around the person, not the number.</p>
+
             <div className="nxp-actions">
               <MagneticButton href="#product">Explore the product <span>→</span></MagneticButton>
               <a href="#nutrition" className="nxp-text-link">Why nutrition matters <span>↓</span></a>
             </div>
+
             <div className="nxp-meta">
               <div><b>01</b><span>LEARN</span></div>
               <div><b>02</b><span>TRACK</span></div>
@@ -250,13 +286,24 @@ export default function Home() {
             <div className="nxp-stage-glow" />
             <div className="nxp-orbit orbit-a" />
             <div className="nxp-orbit orbit-b" />
+
             <div className="nxp-device-rig" style={stageStyle}>
               <Phone src="/app/food.jpeg" alt="GrowFit food screen" className="nxp-small left" />
               <Phone src="/app/home-main.jpeg" alt="GrowFit home screen" className="nxp-main" />
               <Phone src="/app/workouts.jpeg" alt="GrowFit workout screen" className="nxp-small right" />
             </div>
-            <div className="nxp-stat top"><span>DAILY ENERGY</span><strong>2,214 <em>kcal</em></strong><small>Personal target</small></div>
-            <div className="nxp-stat bottom"><span>GOAL PROGRESS</span><strong>+0.5 kg</strong><small>This week</small></div>
+
+            <div className="nxp-stat top">
+              <span>DAILY ENERGY</span>
+              <strong>2,214 <em>kcal</em></strong>
+              <small>Personal target</small>
+            </div>
+
+            <div className="nxp-stat bottom">
+              <span>GOAL PROGRESS</span>
+              <strong>+0.5 kg</strong>
+              <small>This week</small>
+            </div>
           </div>
         </div>
       </section>
@@ -271,6 +318,7 @@ export default function Home() {
       <section id="product" className="nxp-section nxp-product">
         <div className="nxp-wrap">
           <div className="nxp-topline"><Label>THE PRODUCT</Label><span>INTERACTIVE APP TOUR</span></div>
+
           <div className="nxp-heading">
             <h2>Not a concept.<br /><span>A living product.</span></h2>
             <p>Tap through the real GrowFit screens. The website becomes a product demo instead of a static gallery.</p>
@@ -282,14 +330,21 @@ export default function Home() {
               <div className="nxp-tour-label">{screen.label}</div>
               <h3>{screen.title}</h3>
               <p>{screen.text}</p>
+
               <div className="nxp-tour-controls">
                 {appScreens.map((item, index) => (
-                  <button key={item.label} type="button" onClick={() => setActiveScreen(index)} className={index === activeScreen ? "active" : ""}>
+                  <button
+                    key={item.label}
+                    type="button"
+                    onClick={() => setActiveScreen(index)}
+                    className={index === activeScreen ? "active" : ""}
+                  >
                     <small>0{index + 1}</small>{item.label}
                   </button>
                 ))}
               </div>
             </div>
+
             <div className="nxp-tour-stage">
               <div className="nxp-tour-glow" />
               <Phone src={screen.src} alt={`GrowFit ${screen.label}`} className="nxp-tour-phone" />
@@ -320,14 +375,22 @@ export default function Home() {
               <div className="nxp-wheel-node two" />
               <div className="nxp-wheel-node three" />
             </div>
+
             <div className="nxp-lab-info">
               <span className="nxp-lab-index">0{activeNutrient + 1}</span>
               <h3>{nutrient.title}</h3>
               <p>{nutrient.text}</p>
+
               <div className="nxp-nutrient-tabs">
                 {nutrients.map((item, index) => (
-                  <button key={item.key} type="button" onClick={() => setActiveNutrient(index)} className={index === activeNutrient ? "active" : ""}>
-                    <span>{item.title}</span><small>{item.subtitle}</small>
+                  <button
+                    key={item.key}
+                    type="button"
+                    onClick={() => setActiveNutrient(index)}
+                    className={index === activeNutrient ? "active" : ""}
+                  >
+                    <span>{item.title}</span>
+                    <small>{item.subtitle}</small>
                   </button>
                 ))}
               </div>
@@ -339,8 +402,11 @@ export default function Home() {
       <section id="vitamins" className="nxp-section nxp-vitamins">
         <div className="nxp-wrap">
           <div className="nxp-heading">
-            <div><Label>MICRONUTRIENTS</Label><h2>13 vitamins.<br /><span>One beautiful system.</span></h2></div>
-            <p>The visual system stays clean; the detailed knowledge appears underneath when a vitamin is selected.</p>
+            <div>
+              <Label>MICRONUTRIENTS</Label>
+              <h2>13 vitamins.<br /><span>One beautiful system.</span></h2>
+            </div>
+            <p>Explore all 13 vitamins through the visual map, then select any vitamin to reveal the detailed explanation underneath.</p>
           </div>
 
           <div className="nxp-vitamin-hero">
@@ -360,33 +426,55 @@ export default function Home() {
           </div>
 
           <div className="nxp-vitamin-group">
-            <div className="nxp-group-title"><div><span>FAT-SOLUBLE</span><h3>A · D · E · K</h3></div><p>Stored more readily by the body.</p></div>
+            <div className="nxp-group-title">
+              <div><span>FAT-SOLUBLE</span><h3>A · D · E · K</h3></div>
+              <p>Stored more readily by the body.</p>
+            </div>
+
             <div className="nxp-v-cards fat-cards">
               {vitaminsFat.map(([code, name, role, text], i) => (
-                <button key={code} type="button" onClick={() => setActiveVitamin(vitaminDetails.findIndex((item) => item.code === code))} className={`v-card v${i + 1} text-left`}>
-                  <div className="v-card-top"><b>{code}</b><span>{role}</span></div><h4>{name}</h4><p>{text}</p>
+                <button
+                  key={code}
+                  type="button"
+                  onClick={() => setActiveVitamin(vitaminDetails.findIndex((item) => item.code === code))}
+                  className={`v-card v${i + 1} text-left`}
+                >
+                  <div className="v-card-top"><b>{code}</b><span>{role}</span></div>
+                  <h4>{name}</h4>
+                  <p>{text}</p>
                 </button>
               ))}
             </div>
           </div>
 
           <div className="nxp-vitamin-group">
-            <div className="nxp-group-title"><div><span>WATER-SOLUBLE</span><h3>B VITAMINS · C</h3></div><p>Regular dietary intake matters; B12 can be stored longer.</p></div>
+            <div className="nxp-group-title">
+              <div><span>WATER-SOLUBLE</span><h3>B VITAMINS · C</h3></div>
+              <p>Regular dietary intake matters; B12 can be stored longer.</p>
+            </div>
+
             <div className="nxp-v-cards water-cards">
               {vitaminsWater.map(([code, name, role, text], i) => (
-                <button key={code} type="button" onClick={() => setActiveVitamin(vitaminDetails.findIndex((item) => item.code === code))} className={`v-card v${i + 1} text-left`}>
-                  <div className="v-card-top"><b>{code}</b><span>{role}</span></div><h4>{name}</h4><p>{text}</p>
+                <button
+                  key={code}
+                  type="button"
+                  onClick={() => setActiveVitamin(vitaminDetails.findIndex((item) => item.code === code))}
+                  className={`v-card v${i + 1} text-left`}
+                >
+                  <div className="v-card-top"><b>{code}</b><span>{role}</span></div>
+                  <h4>{name}</h4>
+                  <p>{text}</p>
                 </button>
               ))}
             </div>
           </div>
 
-          <div className="flex items-center justify-between gap-4 mt-12">
+          <div className="nxp-detail-label-row">
             <div>
-              <div className="text-[9px] font-semibold tracking-[.22em] text-[#74e5d6]">VITAMIN DETAIL</div>
-              <div className="mt-2 text-sm text-white/40">Select any card above to expand its explanation below.</div>
+              <div className="nxp-detail-kicker">VITAMIN DETAIL</div>
+              <div className="nxp-detail-sub">Select any vitamin above to change the detailed explanation.</div>
             </div>
-            <div className="rounded-full border border-[#c9ff62]/15 bg-[#c9ff62]/[0.05] px-3 py-1.5 text-[9px] font-semibold tracking-[.12em] text-[#c9ff62]">{String(activeVitamin + 1).padStart(2, "0")} / 13</div>
+            <div className="nxp-detail-count">{String(activeVitamin + 1).padStart(2, "0")} / 13</div>
           </div>
 
           <LearnPanel
@@ -405,35 +493,33 @@ export default function Home() {
       <section id="minerals" className="nxp-section nxp-minerals">
         <div className="nxp-wrap">
           <div className="nxp-heading nxp-heading-dark">
-            <div><Label>ESSENTIAL MINERALS</Label><h2>Small amounts.<br /><span>Major responsibilities.</span></h2></div>
-            <p>The solar-system visual remains untouched. The detailed mineral knowledge now lives directly underneath it.</p>
+            <div>
+              <Label>ESSENTIAL MINERALS</Label>
+              <h2>Small amounts.<br /><span>Major responsibilities.</span></h2>
+            </div>
+            <p>The mineral solar-system remains untouched. Select a mineral underneath it to explore what it does and where it comes from.</p>
           </div>
 
           <div className="nxp-mineral-visual">
             <div className="nxp-mineral-center"><span>MINERALS</span><strong>15</strong><small>core nutrients</small></div>
             {minerals.map(([code, name], i) => (
-              <div key={`${code}-${i}`} className={`nxp-mineral-node mn${i + 1}`}><b>{code}</b><span>{name}</span></div>
+              <div key={`${code}-${i}`} className={`nxp-mineral-node mn${i + 1}`}>
+                <b>{code}</b><span>{name}</span>
+              </div>
             ))}
           </div>
 
-          <div className="mt-12 grid gap-4 sm:grid-cols-3">
+          <div className="nxp-mineral-selectors">
             {minerals.map(([code, name], index) => (
               <button
                 key={`selector-${code}`}
                 type="button"
                 onClick={() => setActiveMineral(index)}
-                className={`group rounded-[22px] border p-4 text-left transition duration-200 hover:-translate-y-1 ${
-                  activeMineral === index
-                    ? "border-[#74e5d6]/55 bg-[#74e5d6]/[0.10] shadow-[0_20px_45px_rgba(116,229,214,.07)]"
-                    : "border-white/8 bg-white/[0.022] hover:border-white/15 hover:bg-white/[0.04]"
-                }`}
+                className={activeMineral === index ? "active" : ""}
               >
-                <div className="flex items-center justify-between gap-3">
-                  <span className="text-xl font-bold tracking-[-.04em] text-[#74e5d6]">{code}</span>
-                  <span className="rounded-full border border-white/8 px-2 py-1 text-[8px] font-semibold tracking-[.12em] text-white/35">{mineralDetails[index].type.toUpperCase()}</span>
-                </div>
-                <div className="mt-2 text-sm font-semibold text-white/78">{name}</div>
-                <div className="mt-1 text-[10px] leading-5 text-white/35">Click to explore</div>
+                <span>{code}</span>
+                <strong>{name}</strong>
+                <small>Explore</small>
               </button>
             ))}
           </div>
@@ -457,8 +543,12 @@ export default function Home() {
             <Label>INDIA · NUTRITION</Label>
             <h2>One country.<br /><span>Many nutrition challenges.</span></h2>
             <p>India faces multiple nutrition challenges at the same time: undernutrition, micronutrient deficiencies, overweight and obesity, and diet-related chronic disease.</p>
-            <div className="nxp-india-note"><b>Malnutrition is bigger than being underweight.</b><span>It can include deficiencies, excesses and imbalances in energy and nutrient intake.</span></div>
+            <div className="nxp-india-note">
+              <b>Malnutrition is bigger than being underweight.</b>
+              <span>It can include deficiencies, excesses and imbalances in energy and nutrient intake.</span>
+            </div>
           </div>
+
           <div className="nxp-india-stats">
             <article><strong>67.1%</strong><span>Children 6–59 months with anemia</span><small>NFHS-5 · 2019–21</small></article>
             <article><strong>57.2%</strong><span>Women 15–49 with anemia</span><small>NFHS-5 · 2019–21</small></article>
@@ -475,6 +565,7 @@ export default function Home() {
             <h2>Health becomes more useful when the pieces connect.</h2>
             <p>Food, training, health context, goals and progress are easier to understand when they live in one system.</p>
           </div>
+
           <div className="nxp-insight-phones">
             <Phone src="/app/nutrition-insights.jpeg" alt="GrowFit nutrition insights" />
             <Phone src="/app/profile-goal.jpeg" alt="GrowFit profile goals" className="raised" />
@@ -496,9 +587,40 @@ export default function Home() {
 
       <footer className="nxp-footer">
         <div className="nxp-wrap nxp-footer-grid">
-          <div><a href="#" className="nxp-brand"><span className="nxp-mark">G</span><span><b>GrowFit</b><small>YOUR HEALTH · YOUR PROGRESS</small></span></a><p>Built to make health simpler.</p></div>
-          <div><span>FOUNDER</span><strong>Satya</strong><small>Founder &amp; Creator of GrowFit</small></div>
-          <div className="nxp-footer-right"><span>growfit.store</span><small>© 2026 GrowFit</small></div>
+          <div className="nxp-footer-brand">
+            <a href="#" className="nxp-brand">
+              <span className="nxp-mark">G</span>
+              <span><b>GrowFit</b><small>YOUR HEALTH · YOUR PROGRESS</small></span>
+            </a>
+            <p>Built to make health simpler.</p>
+          </div>
+
+          <div className="nxp-founder">
+            <div className="nxp-founder-photo-wrap">
+              <div className="nxp-founder-glow" />
+              <div className="nxp-founder-photo">
+                <Image
+                  src="/founder/satya-founder.jpg"
+                  alt="Satya, Founder & Creator of GrowFit"
+                  fill
+                  sizes="96px"
+                  className="object-cover object-top"
+                />
+              </div>
+            </div>
+
+            <div className="nxp-founder-info">
+              <span>FOUNDER</span>
+              <strong>Satya</strong>
+              <small>Founder &amp; Creator of GrowFit</small>
+              <p>Building GrowFit to make nutrition, fitness and health easier to understand and easier to follow.</p>
+            </div>
+          </div>
+
+          <div className="nxp-footer-right">
+            <span>growfit.store</span>
+            <small>© 2026 GrowFit</small>
+          </div>
         </div>
       </footer>
     </main>
