@@ -169,3 +169,241 @@ button{font:inherit}
     height:92px;
   }
 }
+
+/* =========================================================
+   GROWFIT FIX — MINERAL ATLAS + DETAIL PANEL
+   These classes were missing from the uploaded stylesheet,
+   which caused the mineral section to render as raw text.
+   ========================================================= */
+
+.nxp-mineral-selectors{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:10px;
+  margin-top:28px;
+  padding:22px;
+  border:1px solid var(--line);
+  border-radius:28px;
+  background:linear-gradient(145deg,#101514,#0b100f);
+  box-shadow:0 24px 70px rgba(0,0,0,.28);
+}
+
+.nxp-mineral-selectors button{
+  appearance:none;
+  width:100%;
+  min-height:92px;
+  margin:0;
+  padding:14px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;
+  background:rgba(255,255,255,.025);
+  color:#eef3ed;
+  text-align:left;
+  cursor:pointer;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  transition:transform .22s ease,border-color .22s ease,background .22s ease,box-shadow .22s ease;
+}
+
+.nxp-mineral-selectors button:hover{
+  transform:translateY(-4px);
+  border-color:rgba(116,229,214,.28);
+  background:rgba(116,229,214,.045);
+  box-shadow:0 18px 45px rgba(0,0,0,.26);
+}
+
+.nxp-mineral-selectors button.active{
+  border-color:rgba(116,229,214,.60);
+  background:linear-gradient(145deg,rgba(116,229,214,.10),rgba(201,255,98,.035));
+  box-shadow:0 18px 50px rgba(116,229,214,.075),inset 0 1px rgba(255,255,255,.05);
+}
+
+.nxp-mineral-selectors button span{
+  display:block;
+  font-size:21px;
+  line-height:1;
+  font-weight:800;
+  letter-spacing:-.04em;
+  color:var(--mint);
+}
+
+.nxp-mineral-selectors button strong{
+  display:block;
+  margin-top:9px;
+  font-size:12px;
+  font-weight:700;
+  color:#dce2dc;
+}
+
+.nxp-mineral-selectors button small{
+  display:block;
+  margin-top:9px;
+  font-size:8px;
+  letter-spacing:.10em;
+  color:#59645e;
+}
+
+.nxp-mineral-selectors button.active small{
+  color:var(--lime);
+}
+
+/* Detailed knowledge panel below the selector */
+.nxp-learn-panel{
+  margin-top:18px;
+  padding:28px;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:32px;
+  background:
+    radial-gradient(circle at 88% 12%,rgba(116,229,214,.10),transparent 27%),
+    radial-gradient(circle at 10% 90%,rgba(168,140,255,.05),transparent 25%),
+    linear-gradient(145deg,#131a17,#0a0f0e);
+  box-shadow:0 34px 95px rgba(0,0,0,.30);
+}
+
+.nxp-learn-grid{
+  display:grid;
+  grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);
+  gap:30px;
+  align-items:start;
+}
+
+.nxp-learn-heading{
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+
+.nxp-learn-code{
+  width:66px;
+  height:66px;
+  flex:0 0 auto;
+  display:grid;
+  place-items:center;
+  border-radius:20px;
+  border:1px solid rgba(201,255,98,.24);
+  background:linear-gradient(145deg,rgba(201,255,98,.10),rgba(116,229,214,.045));
+  color:var(--lime);
+  font-size:22px;
+  font-weight:900;
+  letter-spacing:-.05em;
+  box-shadow:inset 0 1px rgba(255,255,255,.06);
+}
+
+.nxp-learn-eyebrow{
+  font-size:8px;
+  font-weight:700;
+  letter-spacing:.20em;
+  color:var(--mint);
+}
+
+.nxp-learn-heading h3{
+  margin:7px 0 0;
+  color:#eef3ed;
+  font-size:34px;
+  line-height:1;
+  letter-spacing:-.06em;
+}
+
+.nxp-learn-pills{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:23px;
+}
+
+.nxp-learn-pills span{
+  display:inline-flex;
+  align-items:center;
+  min-height:28px;
+  padding:7px 11px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:999px;
+  background:rgba(255,255,255,.028);
+  color:#78837c;
+  font-size:8px;
+  font-weight:700;
+  letter-spacing:.10em;
+}
+
+.nxp-learn-pills span:last-child{
+  border-color:rgba(201,255,98,.18);
+  background:rgba(201,255,98,.045);
+  color:var(--lime);
+}
+
+.nxp-learn-role{
+  max-width:620px;
+  margin:22px 0 0;
+  color:#7c8780;
+  font-size:14px;
+  line-height:1.85;
+}
+
+.nxp-learn-info{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+
+.nxp-learn-info>div{
+  min-width:0;
+  padding:18px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:21px;
+  background:rgba(255,255,255,.025);
+}
+
+.nxp-learn-info>div.full{
+  grid-column:1 / -1;
+}
+
+.nxp-learn-info>div:nth-child(1){
+  border-color:rgba(116,229,214,.11);
+}
+
+.nxp-learn-info>div:nth-child(2){
+  border-color:rgba(168,140,255,.13);
+  background:rgba(168,140,255,.035);
+}
+
+.nxp-learn-info>div:nth-child(3){
+  border-color:rgba(201,255,98,.09);
+  background:rgba(201,255,98,.022);
+}
+
+.nxp-learn-info span{
+  display:block;
+  font-size:8px;
+  font-weight:700;
+  letter-spacing:.18em;
+}
+
+.nxp-learn-info>div:nth-child(1) span{color:var(--mint)}
+.nxp-learn-info>div:nth-child(2) span{color:#bcaeff}
+.nxp-learn-info>div:nth-child(3) span{color:var(--lime)}
+
+.nxp-learn-info p{
+  margin:9px 0 0;
+  color:#77827b;
+  font-size:11px;
+  line-height:1.78;
+}
+
+@media(max-width:1050px){
+  .nxp-mineral-selectors{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .nxp-learn-grid{grid-template-columns:1fr}
+}
+
+@media(max-width:700px){
+  .nxp-mineral-selectors{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    padding:16px;
+    border-radius:24px;
+  }
+  .nxp-mineral-selectors button{min-height:84px}
+  .nxp-learn-panel{padding:20px;border-radius:26px}
+  .nxp-learn-info{grid-template-columns:1fr}
+  .nxp-learn-info>div.full{grid-column:auto}
+}
+

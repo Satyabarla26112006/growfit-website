@@ -437,7 +437,7 @@ export default function Home() {
                   key={code}
                   type="button"
                   onClick={() => setActiveVitamin(vitaminDetails.findIndex((item) => item.code === code))}
-                  className={`v-card v${i + 1} text-left`}
+                  className={`v-card v${i + 1}`}
                 >
                   <div className="v-card-top"><b>{code}</b><span>{role}</span></div>
                   <h4>{name}</h4>
@@ -459,7 +459,7 @@ export default function Home() {
                   key={code}
                   type="button"
                   onClick={() => setActiveVitamin(vitaminDetails.findIndex((item) => item.code === code))}
-                  className={`v-card v${i + 1} text-left`}
+                  className={`v-card v${i + 1}`}
                 >
                   <div className="v-card-top"><b>{code}</b><span>{role}</span></div>
                   <h4>{name}</h4>
